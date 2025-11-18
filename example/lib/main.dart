@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:vph_web_date_picker/vph_web_date_picker.dart';
 
 // import 'material_theme/color_schemes.g.dart';
@@ -25,8 +28,10 @@ class _MyAppState extends State<MyApp> {
   bool _showTodayButton = true;
   bool _showResetButton = true;
   bool _autoCloseOnDateSelect = false;
+  bool _shouldShowTimeSelect = true;
 
   static const _supportedLocales = [
+    Locale('lt', 'LT'),
     Locale('en', 'US'),
     Locale('vi', 'VN'),
     Locale('es', 'ES'),
@@ -37,11 +42,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _selectedDateRange = DateTimeRange(start: DateTime.now().subtract(Duration(days: 5)), end: DateTime.now().add(Duration(days: 5)));
+    _selectedDateRange =
+        DateTimeRange(start: DateTime.now().subtract(Duration(days: 5)), end: DateTime.now().add(Duration(days: 5)));
     _controller = TextEditingController(
         text: _enableRangeSelection
             ? "From ${_selectedDateRange.start.toString().split(' ')[0]} to ${_selectedDateRange.end.toString().split(' ')[0]}"
-            : _selectedDateRange.start.toString().split(' ')[0]);
+            : DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateRange.start));
     _locale = _supportedLocales[0];
   }
 
@@ -98,6 +104,17 @@ class _MyAppState extends State<MyApp> {
                       }),
                     ),
                     const Text("enableRangeSelection"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _shouldShowTimeSelect,
+                      onChanged: (v) => setState(() {
+                        _shouldShowTimeSelect = v!;
+                      }),
+                    ),
+                    const Text("should show time select"),
                   ],
                 ),
                 DropdownButton<PickerViewMode>(
@@ -162,7 +179,14 @@ class _MyAppState extends State<MyApp> {
                       firstDate: DateTime.now().subtract(const Duration(days: 7)),
                       lastDate: DateTime.now().add(const Duration(days: 14000)),
                       width: 400,
+                      withoutActionButtons: false,
                       weekendDaysColor: Colors.red,
+                      backgroundColor: Colors.white,
+                      selectedDayColor: Colors.black,
+                      selectedDayTextColor: Colors.yellow,
+                      confirmButtonColor: Colors.black,
+                      cancelButtonColor: Colors.black,
+                      firstDayOfWeekIndex: 1,
                       // selectedDayColor: Colors.brown,
                       // backgroundColor: Colors.white,
                       // firstDayOfWeekIndex: 1,
@@ -174,6 +198,7 @@ class _MyAppState extends State<MyApp> {
                       showTodayButton: _showTodayButton,
                       showResetButton: _showResetButton,
                       autoCloseOnDateSelect: _autoCloseOnDateSelect,
+                      shouldShowTimeSelector: _shouldShowTimeSelect,
                       // onReset: () {
                       //   print('Date selection reset');
                       // },
@@ -181,9 +206,10 @@ class _MyAppState extends State<MyApp> {
                     if (pickedDateRange != null) {
                       _selectedDateRange = pickedDateRange;
                       if (_enableRangeSelection) {
-                        _controller.text = "From ${_selectedDateRange.start.toString().split(' ')[0]} to ${_selectedDateRange.end.toString().split(' ')[0]}";
+                        _controller.text =
+                            "From ${_selectedDateRange.start.toString().split(' ')[0]} to ${_selectedDateRange.end.toString().split(' ')[0]}";
                       } else {
-                        _controller.text = _selectedDateRange.start.toString().split(' ')[0];
+                        _controller.text = DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateRange.start);
                       }
                     }
                   },
