@@ -38,6 +38,10 @@ Future<DateTimeRange?> showWebDatePicker({
   bool autoCloseOnDateSelect = false,
   void Function()? onReset,
   bool shouldShowTimeSelector = false,
+  bool shouldShowPlaceHolder = true,
+  String? hoursLabelText = 'HH',
+  String? minutesLabelText = 'MM',
+  Color? focusedColor,
 }) {
   if (asDialog) {
     final renderBox = context.findRenderObject()! as RenderBox;
@@ -71,6 +75,10 @@ Future<DateTimeRange?> showWebDatePicker({
               autoCloseOnDateSelect: autoCloseOnDateSelect,
               onReset: onReset,
               shouldShowTimeSelector: shouldShowTimeSelector,
+              shouldShowPlaceHolder: shouldShowPlaceHolder,
+              hoursLabelText: hoursLabelText,
+              minutesLabelText: minutesLabelText,
+              focusedColor: focusedColor,
             ),
           ),
         ),
@@ -100,6 +108,10 @@ Future<DateTimeRange?> showWebDatePicker({
         autoCloseOnDateSelect: autoCloseOnDateSelect,
         onReset: onReset,
         shouldShowTimeSelector: shouldShowTimeSelector,
+        shouldShowPlaceHolder: shouldShowPlaceHolder,
+        hoursLabelText: hoursLabelText,
+        minutesLabelText: minutesLabelText,
+        focusedColor: focusedColor,
       ),
       asDropDown: true,
       useTargetWidth: width != null ? false : true,
@@ -131,6 +143,10 @@ class _WebDatePicker extends StatefulWidget {
     this.onReset,
     this.shouldShowTimeSelector = false,
     this.withoutActionButtons = false,
+    this.shouldShowPlaceHolder = false,
+    this.hoursLabelText,
+    this.minutesLabelText,
+    this.focusedColor,
   });
 
   final List<DateTime> blockedDates;
@@ -154,6 +170,10 @@ class _WebDatePicker extends StatefulWidget {
   final bool autoCloseOnDateSelect;
   final void Function()? onReset;
   final bool shouldShowTimeSelector;
+  final bool shouldShowPlaceHolder;
+  final String? hoursLabelText;
+  final String? minutesLabelText;
+  final Color? focusedColor;
 
   @override
   State<_WebDatePicker> createState() => _WebDatePickerState();
@@ -759,7 +779,7 @@ class _WebDatePickerState extends State<_WebDatePicker> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'HH',
+                      widget.hoursLabelText ?? 'HH',
                       style: TextStyle(color: Colors.black),
                     ),
                     const SizedBox(height: 5),
@@ -774,26 +794,26 @@ class _WebDatePickerState extends State<_WebDatePicker> {
                         style: TextStyle(color: Color.fromRGBO(230, 230, 32, 1)),
                         textAlign: TextAlign.center,
                         cursorColor: Color.fromRGBO(230, 230, 32, 1),
-                        decoration: const InputDecoration(
-                          hintText: 'HH',
-                          hintStyle: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: widget.shouldShowPlaceHolder ? 'HH' : null,
+                          hintStyle: widget.shouldShowPlaceHolder ? TextStyle(color: Colors.white) : null,
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           filled: true,
-                          fillColor: Colors.black,
+                          fillColor: Color.fromRGBO(6, 27, 34, 1),
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(vertical: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Color.fromRGBO(230, 230, 32, 1), width: 1.5),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Color.fromRGBO(230, 230, 32, 1), width: 1.5),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Color.fromRGBO(230, 230, 32, 1), width: 1.5),
-                          ),
+                          focusedBorder: widget.focusedColor != null
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                  borderSide: BorderSide(color: widget.focusedColor!, width: 1.5),
+                                )
+                              : null,
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -818,7 +838,7 @@ class _WebDatePickerState extends State<_WebDatePicker> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'MM',
+                      widget.minutesLabelText ?? 'MM',
                       style: TextStyle(color: Colors.black),
                     ),
                     const SizedBox(height: 5),
@@ -833,26 +853,26 @@ class _WebDatePickerState extends State<_WebDatePicker> {
                         style: TextStyle(color: Color.fromRGBO(230, 230, 32, 1)),
                         textAlign: TextAlign.center,
                         cursorColor: Color.fromRGBO(230, 230, 32, 1),
-                        decoration: const InputDecoration(
-                          hintText: 'MM',
-                          hintStyle: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: widget.shouldShowPlaceHolder ? 'MM' : null,
+                          hintStyle: widget.shouldShowPlaceHolder ? TextStyle(color: Colors.white) : null,
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           filled: true,
-                          fillColor: Colors.black,
+                          fillColor: Color.fromRGBO(6, 27, 34, 1),
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(vertical: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Color.fromRGBO(230, 230, 32, 1), width: 1.5),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Color.fromRGBO(230, 230, 32, 1), width: 1.5),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Color.fromRGBO(230, 230, 32, 1), width: 1.5),
-                          ),
+                          focusedBorder: widget.focusedColor != null
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                  borderSide: BorderSide(color: widget.focusedColor!, width: 1.5),
+                                )
+                              : null,
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -866,7 +886,8 @@ class _WebDatePickerState extends State<_WebDatePicker> {
 
             /// Actions
             Row(
-              mainAxisAlignment: MediaQuery.of(context).size.width > 325 ? MainAxisAlignment.start : MainAxisAlignment.end,
+              mainAxisAlignment:
+                  MediaQuery.of(context).size.width > 325 ? MainAxisAlignment.start : MainAxisAlignment.end,
               children: [
                 if (MediaQuery.of(context).size.width > 325) ...[
                   /// Reset
